@@ -69,6 +69,7 @@
 @synthesize pageNumber = _pageNumber;
 @synthesize bookmarks = _bookmarks;
 @synthesize password = _password;
+@synthesize title = _title;
 @synthesize filePath = _filePath;
 @dynamic fileName, fileURL;
 @dynamic canEmail, canExport, canPrint;
@@ -148,7 +149,7 @@
 	return document;
 }
 
-+ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase
++ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase title:(NSString *)title
 {
 	ReaderDocument *document = nil; // ReaderDocument object
 
@@ -156,7 +157,7 @@
 
 	if (document == nil) // Unarchive failed so create a new ReaderDocument object
 	{
-		document = [[ReaderDocument alloc] initWithFilePath:filePath password:phrase];
+		document = [[ReaderDocument alloc] initWithFilePath:filePath password:phrase title:title];
 	}
 
 	return document;
@@ -189,7 +190,7 @@
 
 #pragma mark - ReaderDocument instance methods
 
-- (instancetype)initWithFilePath:(NSString *)filePath password:(NSString *)phrase
+- (instancetype)initWithFilePath:(NSString *)filePath password:(NSString *)phrase title:(NSString *)title
 {
 	if ((self = [super init])) // Initialize superclass first
 	{
@@ -200,6 +201,8 @@
 			_password = [phrase copy]; // Keep copy of document password
 
 			_filePath = [filePath copy]; // Keep copy of document file path
+
+            _title = title ?: _fileName.lastPathComponent.stringByDeletingPathExtension; // Save document title
 
 			_pageNumber = [NSNumber numberWithInteger:1]; // Start on page one
 
@@ -320,6 +323,8 @@
 	[encoder encodeObject:_fileSize forKey:@"FileSize"];
 
 	[encoder encodeObject:_lastOpen forKey:@"LastOpen"];
+
+    [encoder encodeObject:_title forKey:@"Title"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
@@ -339,6 +344,8 @@
 		_fileSize = [decoder decodeObjectForKey:@"FileSize"];
 
 		_lastOpen = [decoder decodeObjectForKey:@"LastOpen"];
+
+        _title = [decoder decodeObjectForKey:@"Title"];
 
 		if (_guid == nil) _guid = [ReaderDocument GUID];
 

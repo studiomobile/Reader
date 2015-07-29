@@ -36,17 +36,18 @@
 @property (nonatomic, strong, readonly) NSMutableIndexSet *bookmarks;
 @property (nonatomic, strong, readonly) NSString *password;
 @property (nonatomic, strong, readonly) NSString *fileName;
+@property (nonatomic, strong, readonly) NSString *title;
 @property (nonatomic, strong, readonly) NSURL *fileURL;
 
 @property (nonatomic, readonly) BOOL canEmail;
 @property (nonatomic, readonly) BOOL canExport;
 @property (nonatomic, readonly) BOOL canPrint;
 
-+ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase;
++ (ReaderDocument *)withDocumentFilePath:(NSString *)filename password:(NSString *)phrase title:(NSString *)title;
 
 + (ReaderDocument *)unarchiveFromFileName:(NSString *)filePath password:(NSString *)phrase;
 
-- (instancetype)initWithFilePath:(NSString *)filePath password:(NSString *)phrase;
+- (id)initWithFilePath:(NSString *)fullFilePath password:(NSString *)phrase title:(NSString *)title;
 
 - (BOOL)archiveDocumentProperties;
 
